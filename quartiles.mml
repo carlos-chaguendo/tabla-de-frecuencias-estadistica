@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+ <semantics>
+  <mrow>
+   <mrow>
+    <mi mathvariant="italic">Mo</mi>
+    <mo stretchy="false">=</mo>
+    <mrow>
+     <msub>
+      <mi>l</mi>
+      <mi>i</mi>
+     </msub>
+     <mo stretchy="false">+</mo>
+     <mfrac>
+      <mrow>
+       <mrow>
+        <mo fence="true" stretchy="false">(</mo>
+        <mrow>
+         <mrow>
+          <mfrac>
+           <mrow>
+            <mi>n</mi>
+            <mo stretchy="false">∗</mo>
+            <mi>k</mi>
+           </mrow>
+           <mi mathvariant="italic">DIVISOR</mi>
+          </mfrac>
+          <mo stretchy="false">−</mo>
+          <msub>
+           <mi>F</mi>
+           <mrow>
+            <mi>i</mi>
+            <mo stretchy="false">−</mo>
+            <mn>1</mn>
+           </mrow>
+          </msub>
+         </mrow>
+        </mrow>
+        <mo fence="true" stretchy="false">)</mo>
+       </mrow>
+       <mo stretchy="false">∗</mo>
+       <mi>a</mi>
+      </mrow>
+      <msub>
+       <mi>f</mi>
+       <mi>i</mi>
+      </msub>
+     </mfrac>
+    </mrow>
+   </mrow>
+   <mrow>
+    <mspace width="0.5em"/>
+    <mo stretchy="false">=</mo>
+    <mspace width="0.5em"/>
+   </mrow>
+   <mrow>
+    <mi mathvariant="italic">LI</mi>
+    <mo stretchy="false">+</mo>
+    <mfrac>
+     <mrow>
+      <mrow>
+       <mo fence="true" stretchy="false">(</mo>
+       <mrow>
+        <mrow>
+         <mfrac>
+          <mrow>
+           <mi mathvariant="italic">TOTAL</mi>
+           <mo stretchy="false">∗</mo>
+           <mi>K</mi>
+          </mrow>
+          <mi mathvariant="italic">DIVISOR</mi>
+         </mfrac>
+         <mo stretchy="false">−</mo>
+         <mi mathvariant="italic">FMEN</mi>
+        </mrow>
+       </mrow>
+       <mo fence="true" stretchy="false">)</mo>
+      </mrow>
+      <mo stretchy="false">∗</mo>
+      <mi mathvariant="italic">AMPL</mi>
+     </mrow>
+     <mi mathvariant="italic">FI</mi>
+    </mfrac>
+   </mrow>
+   <mrow>
+    <mspace width="0.5em"/>
+    <mo stretchy="false">=</mo>
+    <mspace width="0.5em"/>
+   </mrow>
+   <mi mathvariant="italic">RESULT</mi>
+  </mrow>
+  <annotation encoding="StarMath 5.0">Mo = l_{i}+  { ( {n*k} over {DIVISOR}   - F_{i-1})*a} over { f_{i}  }
+ `=`  LI +  { ( {TOTAL*K} over {DIVISOR}   - FMEN)*AMPL} over { FI  } `=` RESULT</annotation>
+ </semantics>
+</math>

@@ -1,0 +1,404 @@
+<html>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Fullest MathML support using MathJax</title>
+    <script>
+        window.MathJax = {
+            MathML: {
+                extensions: ["mml3.js", "content-mathml.js"]
+            }
+        };
+    </script>
+    <script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script>
+
+    <style>
+        body {
+            font-family: Ubuntu, Arial, sans-serif;
+            font-size: 75%;
+            background-color: #f9f9f9;
+            color: rgb(48, 57, 66)
+        }
+        
+        table thead {
+            border: 1px solid #ccc;
+        }
+        
+        table tbody tr td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .left {
+            float: left;
+            min-height: 300px;
+            width: 50%;
+        }
+        
+        .rigth {
+            float: right;
+            min-height: 300px;
+            width: 50%;
+        }
+        
+        code {
+            color: black;
+            font-size: 120%;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div>
+
+        <textarea id="datos">
+
+        </textarea>
+    </div>
+    <div>
+        <button onclick="calcular()">Calcular</button>
+    </div>
+
+    <div>
+
+
+        <div class="left">
+            <table id="tabla">
+            </table>
+        </div>
+        <div class="rigth">
+            <fieldset>
+                <legend>Moda</legend>
+                <code id="moda">
+  
+                </code>
+            </fieldset>
+            <fieldset>
+                <legend>Mediana</legend>
+                <code id="mediana">
+  
+                </code>
+            </fieldset>
+
+
+            <fieldset>
+                <legend>cuartil
+                    <select id="selectCuartil" onchange="calcularCuartil()">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </legend>
+                <code id="cuartil">
+  
+                </code>
+            </fieldset>
+
+            <fieldset>
+                <legend>Decil
+                    <select id="selectDecil" onchange="calcularDecil()">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                </legend>
+                <code id="decil">
+  
+                </code>
+            </fieldset>
+
+
+        </div>
+
+
+
+    </div>
+
+    <script type="text/javascript">
+        String.prototype.replaceAll = function (search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+
+
+        function calcular() {
+            var datos = []
+            window.datos = datos
+            document.querySelector("#datos").value.trim().split(",").forEach(function (e) {
+                datos.push(parseInt(e.trim()))
+            })
+
+            datos = datos.sort()
+
+            var totaldatos = datos.length
+            var menorValor = datos[0]
+            var mayorValor = datos[datos.length - 1]
+
+            //calulo de la moda
+            var valorModa = 0
+            var claseModal = null
+
+
+            var rango = mayorValor - menorValor
+            var intervalos = Math.round(1 + 3.3 * Math.log10(datos.length))
+            var amplitud = Math.round(rango / intervalos)
+            window.amplitud = amplitud
+
+
+            console.info("Datos", totaldatos, "=", datos)
+            console.info("Rango", rango)
+            console.info("intervalo", intervalos)
+            console.info("amplitud", amplitud)
+
+
+
+            /**
+            Calcula la frecuencia de repeticion de datos
+             */
+            var frecuencia = function (i, s) {
+                var d = 0
+                datos.forEach(function (e) {
+
+                    if (e >= i && e < s) {
+                        d++
+                    }
+                })
+                return d
+            }
+
+
+            var clases = []
+            var limInf = menorValor
+            var limSup = menorValor
+            var Fi_ = 0
+            var Xixfi = 0
+            var FiMas = totaldatos
+
+            for (var i = 0; i < intervalos; i++) {
+
+
+
+                limSup = limInf + amplitud
+
+                var f = frecuencia(limInf, limSup)
+                var Xi = (limSup + limInf) / 2
+                var Xixfi = Xi * f
+
+
+                if (i == 0) {
+                    Fi_ = f
+                    Xixfi_ = Xixfi
+                } else {
+                    var anteriorClase = clases[i - 1]
+                    Fi_ = f + anteriorClase["Fi-"]
+                    FiMas = FiMas - anteriorClase.frecuencia
+                    Xixfi_ += Xixfi
+                }
+
+                var Xi = (limSup + limInf) / 2
+                var Xixfi = Xi * f
+
+                var clase = {
+                    "Xixfi": Xixfi,
+                    "Xi": Xi,
+                    "Fi+": FiMas,
+                    "Fi-": Fi_,
+                    frecuencia: f,
+                    limiteSuperior: limSup,
+                    limiteInferior: limInf,
+                    clase: i + 1,
+                }
+
+                if (f > valorModa) {
+                    valorModa = f
+                    claseModal = clase
+                }
+
+
+
+                clases.push(clase)
+
+                limInf = limSup
+
+            }
+            window.clases = clases
+
+
+
+            var claseModalAnterior = clases[claseModal.clase - 2]
+            var claseModalSiguiente = clases[claseModal.clase]
+
+            var difFreAnt = valorModa - claseModalAnterior.frecuencia
+            var difFreSig = valorModa - claseModalSiguiente.frecuencia
+
+            console.info("lim Inf", claseModal.limiteInferior, "Fi Ant", claseModalAnterior.frecuencia, "Fi Sig", claseModalSiguiente.frecuencia)
+
+
+            var moda = claseModal.limiteInferior + ((difFreAnt * amplitud) / (difFreAnt + difFreSig))
+            var mediaAritmetica = Xixfi_ / totaldatos
+
+
+
+
+            var table = document.querySelector("#tabla")
+
+
+            var html = ""
+            html += "<thead>"
+            html += "<tr>"
+            html += "<th>Clase</th>"
+            html += "<th colspan='2'>Rango</th>"
+            html += "<th>Marca de clase</th>"
+            html += "<th>fi</th>"
+            html += "<th>Fi-</th>"
+            html += "<th>Fi+</th>"
+            html += "<th>Xi*Fi+</th>"
+            html += "</tr>"
+            html += "</thead><tbody>"
+
+            clases.forEach(function (c) {
+                html += "<tr fila='" + c.clase + "'>"
+                html += "<td col='1'>"
+                html += c.clase
+                html += "</td>"
+
+                html += "<td col='2'>"
+                html += c.limiteInferior
+                html += "</td>"
+
+                html += "<td col='3'>"
+                html += c.limiteSuperior
+                html += "</td>"
+
+                html += "<td col='4'>"
+                html += c["Xi"]
+                html += "</td>"
+
+                html += "<td col='5'>"
+                html += c.frecuencia
+                html += "</td>"
+
+
+                html += "<td col='6'>"
+                html += c["Fi-"]
+                html += "</td>"
+
+                html += "<td col='7'>"
+                html += c["Fi+"]
+                html += "</td>"
+
+                html += "<td col='8'>"
+                html += c["Xixfi"]
+                html += "</td>"
+
+
+                html += "</tr>"
+            })
+            table.innerHTML = html + "</tbody>"
+
+
+            var tdModal = document.querySelector("#tabla tr[fila='" + claseModal.clase + "'] td[col='5']")
+            tdModal.style.backgroundColor = "green"
+            tdModal.title = "Valor Modal/Frecuencia mas alta"
+
+            console.info("valor Modal", valorModa, "Moda", moda, tdModal)
+            console.info("Suma de Xi*fi", Xixfi_, "Media ritmetica", mediaAritmetica)
+            console.info(clases)
+
+
+
+            var client = new XMLHttpRequest();
+            client.open('GET', 'moda.mml');
+            client.onreadystatechange = function () {
+
+                document.querySelector("#moda").innerHTML = client.responseText
+                    .replaceAll("LI", claseModal.limiteInferior)
+                    .replaceAll("FI", claseModal.frecuencia)
+                    .replaceAll("FMEN", claseModalAnterior.frecuencia)
+                    .replaceAll("AMPL", amplitud)
+                    .replaceAll("FMAS", claseModalSiguiente.frecuencia)
+                    .replaceAll("RESULT", moda)
+            }
+            client.send();
+
+
+            // calculamos la mediana
+            calcularItem(1, 2, "#mediana", "Mo")
+
+
+        }
+
+
+        function calcularItem(i, divisor, destino, FNAME) {
+            var indicador = (datos.length * i) / divisor
+
+            console.info("Calculando midiar ", indicador)
+            var claseModal = null
+            for (var e = 0; e < clases.length; e++) {
+
+                // se busca el indicador en Fi-
+                if (indicador <= clases[e]["Fi-"]) {
+                    claseModal = clases[e]
+                    console.info("Se encontro en", claseModal)
+
+                    break;
+                }
+
+            }
+
+            var claseModalAnterior = clases[claseModal.clase - 2]
+
+            var resultado = claseModal.limiteInferior + ((((datos.length * i) / divisor) - claseModalAnterior["Fi-"]) * amplitud) / claseModal.frecuencia
+
+            var client = new XMLHttpRequest();
+            client.open('GET', 'quartiles.mml');
+            client.onreadystatechange = function () {
+
+                document.querySelector(destino).innerHTML = client.responseText
+                    .replaceAll("Mo", FNAME)
+                    .replaceAll("LI", claseModal.limiteInferior)
+                    .replaceAll("TOTAL", datos.length)
+                    .replaceAll("K", i)
+                    .replaceAll("DIVISOR", divisor)
+                    .replaceAll("FMEN", claseModalAnterior["Fi-"])
+                    .replaceAll("AMPL", amplitud)
+                    .replaceAll("FI", claseModal.frecuencia)
+                    .replaceAll("RESULT", resultado)
+            }
+            client.send();
+
+
+
+
+        }
+
+        function calcularCuartil() {
+            var i = parseInt(document.querySelector("#selectCuartil").value)
+            var fname = "Q" + i
+            calcularItem(i, 4, "#cuartil", fname)
+        }
+
+        function calcularDecil() {
+            selectDecil
+            var i = parseInt(document.querySelector("#selectDecil").value)
+            var fname = "D" + i
+            calcularItem(i, 10, "#decil", fname)
+
+        }
+    </script>
+</body>
+
+</html>
