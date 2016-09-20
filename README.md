@@ -5,5 +5,6 @@ Para una mejor esperiecia usar firefox, o un navegador que soporte Mathml
 
 
 ![alt tag](https://raw.githubusercontent.com/carlos19932001/tabla-de-frecuencias-estadistica/master/preview.png)
-[-](http://adivantus.com/)
-
+[Care home](http://adivantus.com/)
+[Adivantus](http://adivantus.com/)
+[Senior Care](http://adivantus.com/)
